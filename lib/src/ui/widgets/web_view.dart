@@ -6,7 +6,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_yoco/src/ui/controllers/flutter_yoco_controller.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 /// A webview widget that paints the payment page.
 class FlutterYocoWebView extends StatelessWidget {
@@ -16,9 +15,7 @@ class FlutterYocoWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: WebViewWidget(
-        controller: yocoController.controller,
-      ),
+      child: Center(child: yocoController.controller),
     );
   }
 }

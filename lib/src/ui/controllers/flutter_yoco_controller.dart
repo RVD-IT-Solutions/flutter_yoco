@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_yoco/src/types/yoco_payment.dart';
 import 'package:flutter_yoco/src/ui/widgets/flutter_yoco.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_all/webview_all.dart';
 
 // dart format lib/src/controllers/flutter_yoco_controller.dart
 
@@ -11,7 +11,7 @@ class FlutterYocoController {
   final FlutterYoco widget;
   final void Function(int progress) onProgress;
   final void Function(String url, YocoPayment transaction) onUrlStarted;
-  late final WebViewController _controller;
+  late final Webview _controller;
 
   FlutterYocoController({
     required this.widget,
@@ -51,44 +51,11 @@ class FlutterYocoController {
     _controller = _initController(payment);
   }
 
-  WebViewController get controller => _controller;
+  Webview get controller => _controller;
 
   /// Initializes the controller.
-  WebViewController _initController(YocoPayment payment) {
-    return WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) => onProgress(progress),
-          onUrlChange: (UrlChange change) {
-            if (kDebugMode) {
-              print('Flutter_yoco: Url changed: ${change.url}');
-            }
-          },
-          onPageStarted: (String url) {
-            if (kDebugMode) {
-              print('Flutter_yoco: Page started loading: $url');
-            }
-            onUrlStarted(url, payment);
-          },
-          onPageFinished: (String url) {
-            if (kDebugMode) {
-              print('Flutter_yoco: Page finished loading');
-            }
-          },
-          onWebResourceError: (WebResourceError error) {
-            if (kDebugMode) {
-              print('Flutter_yoco: Error loading page: ${error.description}');
-            }
-          },
-        ),
-      )
-      ..loadRequest(
-        Uri.parse(
-          payment.redirectUrl,
-        ),
-      );
+  Webview _initController(YocoPayment payment) {
+    return Webview(url: payment.redirectUrl);
   }
 
   Future<YocoPayment?> createPayment() async {
